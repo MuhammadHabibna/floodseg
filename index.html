@@ -27,7 +27,7 @@
 <!-- Hero -->
 <section class="hero" id="hero">
   <div class="hero-content">
-    <div class="hero-badge">// NEXUS_DOLANANDATA_2026 — LEADERBOARD #4 //</div>
+    <div class="hero-badge">// NEXUS_DOLANANDATA_2026 //</div>
     <h1 class="glitch" data-text="FLOOD SEGMENTATION">FLOOD <span class="gradient-text">SEGMENTATION</span></h1>
     <p class="hero-desc">Aerial flood mapping via SegFormer-B3 // Triple Loss (CE+Dice+Focal) // 4x TTA Inference // 47.2M Parameters</p>
     <div class="stats-row">
@@ -47,10 +47,6 @@
         <div class="stat-value">10</div>
         <div class="stat-label">Semantic Classes</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">#4</div>
-        <div class="stat-label">Leaderboard Rank</div>
-      </div>
     </div>
   </div>
 </section>
@@ -64,7 +60,7 @@
   </div>
 
   <div class="reveal">
-    <h3 style="color:var(--text-secondary);margin-bottom:1rem;font-size:0.9rem;">Sampel Gambar Dataset</h3>
+    <h3 class="section-subheading">Sampel Gambar Dataset</h3>
     <div class="samples-grid">
       <img src="assets/samples/6358.jpg" alt="Sample 6358" loading="lazy">
       <img src="assets/samples/6676.jpg" alt="Sample 6676" loading="lazy">
@@ -154,27 +150,27 @@
       </div>
       <div class="pipeline-arrow">→</div>
       <div class="pipeline-step">
-        <div class="pipeline-icon" style="border-color:var(--neon-magenta);">B3</div>
+        <div class="pipeline-icon" style="border-color:var(--telkom-darkred);">B3</div>
         <span>MIT-B3<br>Encoder</span>
       </div>
       <div class="pipeline-arrow">→</div>
       <div class="pipeline-step">
-        <div class="pipeline-icon" style="border-color:var(--neon-lime);">FE</div>
+        <div class="pipeline-icon" style="border-color:var(--telkom-red);">FE</div>
         <span>Multi-Scale<br>Features</span>
       </div>
       <div class="pipeline-arrow">→</div>
       <div class="pipeline-step">
-        <div class="pipeline-icon" style="border-color:var(--neon-yellow);">ML</div>
+        <div class="pipeline-icon" style="border-color:#cc3333;">ML</div>
         <span>MLP Decode<br>Head</span>
       </div>
       <div class="pipeline-arrow">→</div>
       <div class="pipeline-step">
-        <div class="pipeline-icon" style="border-color:var(--neon-red);">UP</div>
+        <div class="pipeline-icon" style="border-color:#d44040;">UP</div>
         <span>Upsample<br>Bilinear 4×</span>
       </div>
       <div class="pipeline-arrow">→</div>
       <div class="pipeline-step">
-        <div class="pipeline-icon" style="border-color:var(--neon-red);background:rgba(255,0,64,0.05);">10</div>
+        <div class="pipeline-icon" style="border-color:var(--telkom-darkred);background:rgba(182,37,42,0.05);">10</div>
         <span>Segmentation<br>Map (10 cls)</span>
       </div>
     </div>
@@ -343,11 +339,11 @@ epochs.forEach(e => {
 
 // IoU bars
 const iouData = [
-  ['background',0.3614,'#6b7280',true],['building_flooded',0.4142,'#ef4444',true],
-  ['building_non_flooded',0.0000,'#f97316',false],['grass',0.5646,'#22c55e',true],
-  ['pool',0.3155,'#06b6d4',true],['road_flooded',0.4197,'#a855f7',true],
-  ['road_non_flooded',0.0000,'#14b8a6',false],['tree',0.5229,'#16a34a',true],
-  ['vehicle',0.2751,'#f59e0b',true],['water',0.0733,'#3b82f6',true],
+  ['background',0.3614,'#55565B',true],['building_flooded',0.4142,'#ED1E28',true],
+  ['building_non_flooded',0.0000,'#959597',false],['grass',0.5646,'#ff6b6b',true],
+  ['pool',0.3155,'#B6252A',true],['road_flooded',0.4197,'#cc3333',true],
+  ['road_non_flooded',0.0000,'#959597',false],['tree',0.5229,'#e85555',true],
+  ['vehicle',0.2751,'#d44040',true],['water',0.0733,'#ff4444',true],
 ];
 const grid = document.getElementById('iou-grid');
 iouData.forEach(d => {

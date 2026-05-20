@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
       if (Math.random() > 0.85) {
         hero.style.transform = `translate(${(Math.random()-0.5)*6}px, ${(Math.random()-0.5)*3}px)`;
-        hero.style.textShadow = `${(Math.random()-0.5)*4}px 0 var(--neon-cyan), ${(Math.random()-0.5)*-4}px 0 var(--neon-magenta)`;
+        hero.style.textShadow = `${(Math.random()-0.5)*4}px 0 #ED1E28, ${(Math.random()-0.5)*-4}px 0 #B6252A`;
         setTimeout(() => {
           hero.style.transform = '';
           hero.style.textShadow = '';

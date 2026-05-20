@@ -7,26 +7,30 @@
 
 /* ── Reset & Variables ─────────────────────────────────────── */
 :root {
-  --bg-primary: #050505;
-  --bg-secondary: #0a0a0a;
-  --bg-card: #0d0d0d;
-  --bg-surface: #111111;
-  --border-primary: #00ffcc;
-  --border-secondary: #ff00ff;
-  --border-dim: #1a1a1a;
-  --text-primary: #e0e0e0;
-  --text-secondary: #888888;
-  --text-muted: #555555;
-  --neon-cyan: #00ffcc;
-  --neon-magenta: #ff00ff;
-  --neon-lime: #00ff41;
-  --neon-yellow: #ffff00;
-  --neon-red: #ff0040;
-  --neon-blue: #0066ff;
-  --gradient-neon: linear-gradient(90deg, #00ffcc, #ff00ff);
-  --gradient-warm: linear-gradient(90deg, #ffff00, #ff0040);
-  --shadow-neon: 0 0 20px rgba(0, 255, 204, 0.3), 0 0 60px rgba(0, 255, 204, 0.1);
-  --shadow-magenta: 0 0 20px rgba(255, 0, 255, 0.3), 0 0 60px rgba(255, 0, 255, 0.1);
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #0e0e0e;
+  --bg-card: #111111;
+  --bg-surface: #161616;
+  --border-primary: #ED1E28;
+  --border-secondary: #B6252A;
+  --border-dim: #2a2a2a;
+  --text-primary: #e8e8e8;
+  --text-secondary: #959597;
+  --text-muted: #55565B;
+  --telkom-red: #ED1E28;
+  --telkom-darkred: #B6252A;
+  --telkom-gray: #55565B;
+  --telkom-lightgray: #959597;
+  --neon-cyan: #ED1E28;
+  --neon-magenta: #B6252A;
+  --neon-lime: #ff6b6b;
+  --neon-yellow: #ff4444;
+  --neon-red: #ED1E28;
+  --neon-blue: #B6252A;
+  --gradient-neon: linear-gradient(90deg, #ED1E28, #B6252A);
+  --gradient-warm: linear-gradient(90deg, #ff4444, #B6252A);
+  --shadow-neon: 0 0 20px rgba(237, 30, 40, 0.3), 0 0 60px rgba(237, 30, 40, 0.1);
+  --shadow-magenta: 0 0 20px rgba(182, 37, 42, 0.3), 0 0 60px rgba(182, 37, 42, 0.1);
   --radius: 2px;
   --radius-sm: 0px;
   --border-w: 2px;
@@ -57,8 +61,8 @@ body::after {
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 255, 204, 0.015) 2px,
-    rgba(0, 255, 204, 0.015) 4px
+    rgba(237, 30, 40, 0.012) 2px,
+    rgba(237, 30, 40, 0.012) 4px
   );
   pointer-events: none;
   z-index: 9999;
@@ -116,7 +120,7 @@ body::after {
 .nav-links a:hover, .nav-links a.active {
   color: var(--neon-cyan);
   border-color: var(--neon-cyan);
-  background: rgba(0, 255, 204, 0.05);
+  background: rgba(237, 30, 40, 0.05);
 }
 
 .nav-toggle {
@@ -148,7 +152,7 @@ section {
   color: var(--neon-cyan);
   margin-bottom: 0.75rem;
   padding: 0.25rem 0.75rem;
-  background: rgba(0, 255, 204, 0.05);
+  background: rgba(237, 30, 40, 0.05);
   border: var(--border-w) solid var(--neon-cyan);
 }
 
@@ -170,6 +174,15 @@ section {
   line-height: 1.5;
 }
 
+.section-subheading {
+  color: var(--telkom-red);
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 /* ── Hero Section ──────────────────────────────────────────── */
 .hero {
   min-height: 100vh;
@@ -189,8 +202,8 @@ section {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   background:
-    radial-gradient(circle at 20% 50%, rgba(0, 255, 204, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at 80% 50%, rgba(255, 0, 255, 0.04) 0%, transparent 50%);
+    radial-gradient(circle at 20% 50%, rgba(237, 30, 40, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(182, 37, 42, 0.04) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -204,7 +217,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(0, 255, 204, 0.05);
+  background: rgba(237, 30, 40, 0.05);
   border: var(--border-w) solid var(--neon-cyan);
   padding: 0.4rem 1.2rem;
   font-size: 0.7rem;
@@ -227,8 +240,8 @@ section {
 }
 
 .hero h1 .gradient-text {
-  color: var(--neon-cyan);
-  text-shadow: 0 0 10px rgba(0, 255, 204, 0.5), 0 0 40px rgba(0, 255, 204, 0.2);
+  color: var(--telkom-red);
+  text-shadow: 0 0 10px rgba(237, 30, 40, 0.5), 0 0 40px rgba(237, 30, 40, 0.2);
 }
 
 .hero-desc {
@@ -273,7 +286,7 @@ section {
   font-weight: 800;
   font-family: 'JetBrains Mono', monospace;
   color: var(--neon-cyan);
-  text-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
+  text-shadow: 0 0 8px rgba(237, 30, 40, 0.4);
 }
 
 .stat-label {
@@ -325,7 +338,7 @@ section {
 .eda-tab:last-child { border-right: none; }
 
 .eda-tab:hover, .eda-tab.active {
-  background: rgba(0, 255, 204, 0.08);
+  background: rgba(237, 30, 40, 0.08);
   color: var(--neon-cyan);
   border-color: var(--neon-cyan);
 }
@@ -354,7 +367,7 @@ section {
 .eda-caption {
   margin: 0;
   padding: 1rem 1.25rem;
-  background: rgba(0, 255, 204, 0.03);
+  background: rgba(237, 30, 40, 0.03);
   border-left: 3px solid var(--neon-cyan);
   font-size: 0.78rem;
   color: var(--text-secondary);
@@ -397,13 +410,13 @@ section {
   font-size: 1rem;
   font-weight: 800;
   font-family: 'JetBrains Mono', monospace;
-  background: rgba(0, 255, 204, 0.03);
+  background: rgba(237, 30, 40, 0.03);
   transition: var(--transition);
   letter-spacing: 0.05em;
 }
 
 .pipeline-icon:hover {
-  background: rgba(0, 255, 204, 0.1);
+  background: rgba(237, 30, 40, 0.1);
   box-shadow: var(--shadow-neon);
 }
 
@@ -421,7 +434,7 @@ section {
   color: var(--neon-cyan);
   margin: 0 0.25rem;
   flex-shrink: 0;
-  text-shadow: 0 0 6px rgba(0, 255, 204, 0.4);
+  text-shadow: 0 0 6px rgba(237, 30, 40, 0.4);
 }
 
 /* ── Spec Grid ─────────────────────────────────────────────── */
@@ -442,7 +455,7 @@ section {
 }
 
 .spec-item:hover {
-  background: rgba(0, 255, 204, 0.03);
+  background: rgba(237, 30, 40, 0.03);
   border-color: var(--neon-cyan);
 }
 
@@ -521,15 +534,15 @@ section {
 }
 
 .data-table tr:hover td {
-  background: rgba(0, 255, 204, 0.03);
+  background: rgba(237, 30, 40, 0.03);
   color: var(--neon-cyan);
 }
 
 .data-table .best-row td {
-  background: rgba(0, 255, 65, 0.06);
-  color: var(--neon-lime);
+  background: rgba(237, 30, 40, 0.06);
+  color: var(--telkom-red);
   font-weight: 700;
-  border-bottom: var(--border-w) solid var(--neon-lime);
+  border-bottom: var(--border-w) solid var(--telkom-red);
 }
 
 /* ── IoU Bars ──────────────────────────────────────────────── */
@@ -551,7 +564,7 @@ section {
 }
 
 .iou-row:hover {
-  background: rgba(0, 255, 204, 0.02);
+  background: rgba(237, 30, 40, 0.02);
 }
 
 .iou-row:last-child { border-bottom: none; }
@@ -630,7 +643,7 @@ section {
   font-family: 'JetBrains Mono', monospace;
   color: var(--neon-magenta);
   font-size: 0.65rem;
-  background: rgba(255, 0, 255, 0.05);
+  background: rgba(182, 37, 42, 0.05);
   padding: 0.1rem 0.4rem;
   border: 1px solid var(--neon-magenta);
 }
@@ -683,7 +696,7 @@ section {
 
 .sub-stat:hover {
   border-color: var(--neon-yellow);
-  background: rgba(255, 255, 0, 0.02);
+  background: rgba(237, 30, 40, 0.02);
 }
 
 .sub-stat .num {
@@ -691,7 +704,7 @@ section {
   font-weight: 800;
   font-family: 'JetBrains Mono', monospace;
   color: var(--neon-yellow);
-  text-shadow: 0 0 8px rgba(255, 255, 0, 0.3);
+  text-shadow: 0 0 8px rgba(237, 30, 40, 0.3);
 }
 
 .sub-stat .desc {
@@ -809,12 +822,12 @@ section {
   width: 100%; height: 100%;
 }
 .glitch::before {
-  color: var(--neon-cyan);
+  color: var(--telkom-red);
   animation: glitch1 3s infinite;
   clip-path: inset(0 0 80% 0);
 }
 .glitch::after {
-  color: var(--neon-magenta);
+  color: var(--telkom-darkred);
   animation: glitch2 3s infinite;
   clip-path: inset(80% 0 0 0);
 }
