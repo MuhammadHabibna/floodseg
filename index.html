@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLOODSEG:// — Nexus DolananData 2026</title>
+  <meta name="description" content="Dashboard laporan hasil segmentasi banjir menggunakan SegFormer-B3 untuk kompetisi Nexus DolananData 2026">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+  <div class="nav-brand">FLOODSEG://</div>
+  <button class="nav-toggle">☰</button>
+  <ul class="nav-links">
+    <li><a href="#hero">[HOME]</a></li>
+    <li><a href="#eda">[EDA]</a></li>
+    <li><a href="#model">[MODEL]</a></li>
+    <li><a href="#training">[TRAIN]</a></li>
+    <li><a href="#performance">[PERF]</a></li>
+    <li><a href="#predictions">[PRED]</a></li>
+    <li><a href="#submission">[SUB]</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-badge">// NEXUS_DOLANANDATA_2026 — LEADERBOARD #4 //</div>
+    <h1 class="glitch" data-text="FLOOD SEGMENTATION">FLOOD <span class="gradient-text">SEGMENTATION</span></h1>
+    <p class="hero-desc">Aerial flood mapping via SegFormer-B3 // Triple Loss (CE+Dice+Focal) // 4x TTA Inference // 47.2M Parameters</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value counter" data-target="0.57678" data-decimals="5">0</div>
+        <div class="stat-label">Public Score (mIoU)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value counter" data-target="1444" data-decimals="0">0</div>
+        <div class="stat-label">Training Images</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value counter" data-target="47.2" data-decimals="1" data-suffix="M">0</div>
+        <div class="stat-label">Parameters</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">10</div>
+        <div class="stat-label">Semantic Classes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">#4</div>
+        <div class="stat-label">Leaderboard Rank</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDA -->
+<section id="eda">
+  <div class="reveal">
+    <span class="section-label">// EXPLORATORY DATA ANALYSIS</span>
+    <h2 class="section-title">Analisis Dataset</h2>
+    <p class="section-subtitle">Eksplorasi mendalam terhadap 1.892 citra aerial (1.444 train + 448 val) dengan 10 kelas segmentasi.</p>
+  </div>
+
+  <div class="reveal">
+    <h3 style="color:var(--text-secondary);margin-bottom:1rem;font-size:0.9rem;">Sampel Gambar Dataset</h3>
+    <div class="samples-grid">
+      <img src="assets/samples/6358.jpg" alt="Sample 6358" loading="lazy">
+      <img src="assets/samples/6676.jpg" alt="Sample 6676" loading="lazy">
+      <img src="assets/samples/7118.jpg" alt="Sample 7118" loading="lazy">
+      <img src="assets/samples/7193.jpg" alt="Sample 7193" loading="lazy">
+      <img src="assets/samples/7313.jpg" alt="Sample 7313" loading="lazy">
+      <img src="assets/samples/8967.jpg" alt="Sample 8967" loading="lazy">
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:3rem;">
+    <div class="eda-tabs">
+      <button class="eda-tab active" data-target="eda-1">Distribusi Piksel</button>
+      <button class="eda-tab" data-target="eda-2">Class Imbalance</button>
+      <button class="eda-tab" data-target="eda-3">Frekuensi Kelas</button>
+      <button class="eda-tab" data-target="eda-4">Co-occurrence</button>
+      <button class="eda-tab" data-target="eda-5">Pixel Pie</button>
+      <button class="eda-tab" data-target="eda-6">Coverage Boxplot</button>
+      <button class="eda-tab" data-target="eda-7">Train vs Val</button>
+      <button class="eda-tab" data-target="eda-8">Class Richness</button>
+      <button class="eda-tab" data-target="eda-9">Objek/Gambar</button>
+      <button class="eda-tab" data-target="eda-10">Dimensi Gambar</button>
+      <button class="eda-tab" data-target="eda-11">Size Heatmap</button>
+    </div>
+    <div class="eda-display">
+      <div class="eda-item active" id="eda-1">
+        <img src="assets/eda/02_class_pixel_pct.png" alt="Class Pixel Distribution" loading="lazy">
+        <div class="eda-caption">Kelas <strong>grass</strong> dan <strong>tree</strong> mendominasi lebih dari 50% total piksel, sementara kelas <strong>vehicle</strong> dan <strong>water</strong> sangat langka (&lt;2%). Ketimpangan ini memerlukan class weighting khusus.</div>
+      </div>
+      <div class="eda-item" id="eda-2">
+        <img src="assets/eda/03_class_imbalance_log.png" alt="Class Imbalance" loading="lazy">
+        <div class="eda-caption">Visualisasi skala logaritmik memperlihatkan perbedaan jumlah piksel antar kelas yang sangat ekstrem — hingga 100x lipat antara kelas dominan dan minoritas.</div>
+      </div>
+      <div class="eda-item" id="eda-3">
+        <img src="assets/eda/06_class_frequency.png" alt="Class Frequency" loading="lazy">
+        <div class="eda-caption">Frekuensi kemunculan kelas di seluruh gambar. Kelas <strong>building_non_flooded</strong> dan <strong>road_non_flooded</strong> hampir tidak muncul sama sekali di data.</div>
+      </div>
+      <div class="eda-item" id="eda-4">
+        <img src="assets/eda/05_class_cooccurrence.png" alt="Co-occurrence Heatmap" loading="lazy">
+        <div class="eda-caption">Heatmap co-occurrence menunjukkan kelas mana yang sering muncul bersamaan dalam satu gambar. <strong>Tree + Grass</strong> adalah pasangan paling umum.</div>
+      </div>
+      <div class="eda-item" id="eda-5">
+        <img src="assets/eda/07_pixel_pie.png" alt="Pixel Pie Chart" loading="lazy">
+        <div class="eda-caption">Proporsi piksel per kelas dalam bentuk pie chart. Sangat jelas terlihat dominasi kelas vegetasi (grass + tree).</div>
+      </div>
+      <div class="eda-item" id="eda-6">
+        <img src="assets/eda/08_coverage_boxplot.png" alt="Coverage Boxplot" loading="lazy">
+        <div class="eda-caption">Boxplot menunjukkan variasi cakupan (coverage) setiap kelas per gambar. Kelas langka memiliki median mendekati nol dengan outlier tinggi.</div>
+      </div>
+      <div class="eda-item" id="eda-7">
+        <img src="assets/eda/09_train_vs_val.png" alt="Train vs Val" loading="lazy">
+        <div class="eda-caption">Perbandingan distribusi piksel antara data Train dan Validasi. Distribusi yang mirip memastikan validasi yang representatif.</div>
+      </div>
+      <div class="eda-item" id="eda-8">
+        <img src="assets/eda/11_class_richness.png" alt="Class Richness" loading="lazy">
+        <div class="eda-caption">Histogram jumlah kelas unik per gambar. Rata-rata setiap gambar mengandung 3-4 kelas berbeda.</div>
+      </div>
+      <div class="eda-item" id="eda-9">
+        <img src="assets/eda/04_objects_per_image.png" alt="Objects per Image" loading="lazy">
+        <div class="eda-caption">Distribusi jumlah objek per gambar. Mayoritas gambar memiliki 5-15 objek anotasi individual.</div>
+      </div>
+      <div class="eda-item" id="eda-10">
+        <img src="assets/eda/01_image_dimensions.png" alt="Image Dimensions" loading="lazy">
+        <div class="eda-caption">Scatter plot dimensi gambar. Sebagian besar gambar berukuran seragam (640×480 piksel).</div>
+      </div>
+      <div class="eda-item" id="eda-11">
+        <img src="assets/eda/10_size_heatmap.png" alt="Size Heatmap" loading="lazy">
+        <div class="eda-caption">Heatmap konsentrasi ukuran gambar. Mayoritas terkonsentrasi di satu titik (resolusi seragam).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Model Architecture -->
+<section id="model">
+  <div class="reveal">
+    <span class="section-label">// MODEL ARCHITECTURE</span>
+    <h2 class="section-title">SegFormer-B3</h2>
+    <p class="section-subtitle">Arsitektur Transformer untuk segmentasi semantik dari NVIDIA, di-fine-tune pada dataset banjir aerial.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="pipeline-icon">IN</div>
+        <span>Input Image<br>480×640</span>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon" style="border-color:var(--neon-magenta);">B3</div>
+        <span>MIT-B3<br>Encoder</span>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon" style="border-color:var(--neon-lime);">FE</div>
+        <span>Multi-Scale<br>Features</span>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon" style="border-color:var(--neon-yellow);">ML</div>
+        <span>MLP Decode<br>Head</span>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon" style="border-color:var(--neon-red);">UP</div>
+        <span>Upsample<br>Bilinear 4×</span>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-icon" style="border-color:var(--neon-red);background:rgba(255,0,64,0.05);">10</div>
+        <span>Segmentation<br>Map (10 cls)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="spec-grid">
+      <div class="spec-item"><div class="label">Backbone</div><div class="value">MIT-B3</div></div>
+      <div class="spec-item"><div class="label">Parameters</div><div class="value">47.2M</div></div>
+      <div class="spec-item"><div class="label">Pre-trained</div><div class="value">ImageNet-1K</div></div>
+      <div class="spec-item"><div class="label">Input Size</div><div class="value">480 × 640</div></div>
+      <div class="spec-item"><div class="label">Batch Size</div><div class="value">16 (8/GPU)</div></div>
+      <div class="spec-item"><div class="label">GPU</div><div class="value">2× Tesla T4</div></div>
+      <div class="spec-item"><div class="label">Optimizer</div><div class="value">AdamW</div></div>
+      <div class="spec-item"><div class="label">Scheduler</div><div class="value">OneCycleLR</div></div>
+      <div class="spec-item"><div class="label">Loss Function</div><div class="value">CE + Dice + Focal</div></div>
+      <div class="spec-item"><div class="label">Loss Weights</div><div class="value">0.3 / 0.5 / 0.2</div></div>
+      <div class="spec-item"><div class="label">Epochs</div><div class="value">25</div></div>
+      <div class="spec-item"><div class="label">AMP</div><div class="value">FP16 Mixed</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Training Results -->
+<section id="training">
+  <div class="reveal">
+    <span class="section-label">// TRAINING RESULTS</span>
+    <h2 class="section-title">Kurva Pelatihan</h2>
+    <p class="section-subtitle">Visualisasi perjalanan model selama 25 epoch pelatihan pada dual GPU Tesla T4.</p>
+  </div>
+  <div class="reveal chart-container">
+    <img src="assets/training/training_curves.png" alt="Training Curves" loading="lazy">
+  </div>
+  <div class="reveal" style="margin-top:2rem;">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value" style="font-size:1.4rem;">0.3683</div><div class="stat-label">Best Val mIoU</div></div>
+      <div class="stat-card"><div class="stat-value" style="font-size:1.4rem;">0.5205</div><div class="stat-label">Best Val mDice</div></div>
+      <div class="stat-card"><div class="stat-value" style="font-size:1.4rem;">0.6149</div><div class="stat-label">Pixel Accuracy</div></div>
+      <div class="stat-card"><div class="stat-value" style="font-size:1.4rem;">Ep 19</div><div class="stat-label">Best Epoch</div></div>
+    </div>
+  </div>
+  <div class="reveal">
+    <div class="table-wrapper">
+      <table class="data-table" id="epoch-table">
+        <thead><tr><th>Epoch</th><th>Tr Loss</th><th>Tr mIoU</th><th>Val Loss</th><th>Val mIoU</th><th>Val mDice</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Per-Class Performance -->
+<section id="performance">
+  <div class="reveal">
+    <span class="section-label">// PER-CLASS ANALYSIS</span>
+    <h2 class="section-title">Performa Per Kelas</h2>
+    <p class="section-subtitle">Rincian IoU per kelas menunjukkan kekuatan dan kelemahan model pada masing-masing kategori segmentasi.</p>
+  </div>
+  <div class="reveal chart-container">
+    <img src="assets/training/per_class_iou.png" alt="Per Class IoU" loading="lazy">
+  </div>
+  <div class="reveal">
+    <div class="iou-grid" id="iou-grid"></div>
+  </div>
+</section>
+
+<!-- Prediction Gallery -->
+<section id="predictions">
+  <div class="reveal">
+    <span class="section-label">// PREDICTION GALLERY</span>
+    <h2 class="section-title">Hasil Prediksi (Before-After)</h2>
+    <p class="section-subtitle">Visualisasi overlay prediksi model pada gambar test menggunakan Test-Time Augmentation (TTA) 4×.</p>
+  </div>
+  <div class="reveal">
+    <div class="legend-grid">
+      <div class="legend-item"><div class="legend-dot" style="background:#ff0000"></div>Building Flooded</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#800000"></div>Building Non-Flooded</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#00ff00"></div>Grass</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#00ffff"></div>Pool</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ffa500"></div>Road Flooded</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#808000"></div>Road Non-Flooded</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#008000"></div>Tree</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff00ff"></div>Vehicle</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#0000ff"></div>Water</div>
+    </div>
+  </div>
+  <div class="reveal">
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="assets/predictions/6445_pred.png" alt="Prediction 6445" loading="lazy"><div class="caption"><span>Original vs Predicted Mask</span><span class="id-tag">ID: 6445</span></div></div>
+      <div class="gallery-item"><img src="assets/predictions/6561_pred.png" alt="Prediction 6561" loading="lazy"><div class="caption"><span>Original vs Predicted Mask</span><span class="id-tag">ID: 6561</span></div></div>
+      <div class="gallery-item"><img src="assets/predictions/9037_pred.png" alt="Prediction 9037" loading="lazy"><div class="caption"><span>Original vs Predicted Mask</span><span class="id-tag">ID: 9037</span></div></div>
+      <div class="gallery-item"><img src="assets/predictions/9367_pred.png" alt="Prediction 9367" loading="lazy"><div class="caption"><span>Original vs Predicted Mask</span><span class="id-tag">ID: 9367</span></div></div>
+      <div class="gallery-item"><img src="assets/predictions/9721_pred.png" alt="Prediction 9721" loading="lazy"><div class="caption"><span>Original vs Predicted Mask</span><span class="id-tag">ID: 9721</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Submission Stats -->
+<section id="submission">
+  <div class="reveal">
+    <span class="section-label">// SUBMISSION STATISTICS</span>
+    <h2 class="section-title">Statistik Submisi</h2>
+    <p class="section-subtitle">Ringkasan file submission.csv yang diunggah ke Kaggle Leaderboard.</p>
+  </div>
+  <div class="reveal">
+    <div class="sub-stats-grid">
+      <div class="sub-stat"><div class="num counter" data-target="4470" data-decimals="0">0</div><div class="desc">Total Rows</div></div>
+      <div class="sub-stat"><div class="num counter" data-target="447" data-decimals="0">0</div><div class="desc">Test Images</div></div>
+      <div class="sub-stat"><div class="num counter" data-target="2465" data-decimals="0">0</div><div class="desc">Non-Empty Predictions</div></div>
+      <div class="sub-stat"><div class="num counter" data-target="55.1" data-decimals="1" data-suffix="%">0</div><div class="desc">Detection Rate</div></div>
+      <div class="sub-stat"><div class="num">~12 MB</div><div class="desc">File Size</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-brand">FLOODSEG:// — NEXUS DOLANANDATA 2026</div>
+  <div class="footer-sub">DOLANAN DATA — TELKOM UNIVERSITY SURABAYA (TELU)</div>
+  <div class="tech-stack">
+    <span class="tech-tag">PyTorch</span><span class="tech-tag">HuggingFace Transformers</span>
+    <span class="tech-tag">SegFormer-B3</span><span class="tech-tag">Albumentations</span>
+    <span class="tech-tag">OpenCV</span><span class="tech-tag">Kaggle T4 GPU × 2</span>
+    <span class="tech-tag">AMP (FP16)</span><span class="tech-tag">TTA Inference</span>
+  </div>
+  <div class="footer-copy">// 2026 DOLANAN DATA TEAM // BUILT FOR NEXUS DOLANANDATA COMPETITION //</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+// Epoch data from EKS_1 logs
+const epochs = [
+  [1,1.9660,0.1978,1.9060,0.2225,0.3427,true],
+  [2,1.9151,0.2188,1.8954,0.2257,0.3415,true],
+  [3,1.8783,0.2190,1.8208,0.2664,0.3987,true],
+  [4,1.8513,0.2352,1.8851,0.2319,0.3480,false],
+  [5,1.7944,0.2559,1.8375,0.2835,0.4184,true],
+  [6,1.7616,0.2776,1.7915,0.2967,0.4391,true],
+  [7,1.7360,0.2863,1.7890,0.2848,0.4253,false],
+  [8,1.7064,0.2965,1.7584,0.3168,0.4613,true],
+  [9,1.6530,0.3280,1.8108,0.3036,0.4483,false],
+  [10,1.6052,0.3455,1.7870,0.3251,0.4717,true],
+  [11,1.6115,0.3422,1.7657,0.3198,0.4676,false],
+  [12,1.5723,0.3637,1.7875,0.3147,0.4594,false],
+  [13,1.5287,0.3871,1.8157,0.3143,0.4661,false],
+  [14,1.4698,0.4081,1.8172,0.3443,0.4964,true],
+  [15,1.4838,0.4101,1.8381,0.3340,0.4854,false],
+  [16,1.4148,0.4417,1.8413,0.3464,0.4976,true],
+  [17,1.3579,0.4714,1.8530,0.3542,0.5071,true],
+  [18,1.3383,0.4831,1.9407,0.3651,0.5157,true],
+  [19,1.2839,0.5067,1.9256,0.3683,0.5205,true],
+  [20,1.2693,0.5181,1.9684,0.3663,0.5188,false],
+  [21,1.2470,0.5365,1.9781,0.3655,0.5181,false],
+  [22,1.2246,0.5469,1.9580,0.3635,0.5153,false],
+  [23,1.2195,0.5454,1.9803,0.3678,0.5204,false],
+  [24,1.2139,0.5496,1.9612,0.3653,0.5176,false],
+  [25,1.1933,0.5589,1.9833,0.3669,0.5193,false],
+];
+const tbody = document.querySelector('#epoch-table tbody');
+epochs.forEach(e => {
+  const tr = document.createElement('tr');
+  if (e[0] === 19) tr.className = 'best-row';
+  tr.innerHTML = `<td>${e[0]}</td><td>${e[1].toFixed(4)}</td><td>${e[2].toFixed(4)}</td><td>${e[3].toFixed(4)}</td><td>${e[4].toFixed(4)}</td><td>${e[5].toFixed(4)}</td><td>${e[6]?'✔ Best':'—'}</td>`;
+  tbody.appendChild(tr);
+});
+
+// IoU bars
+const iouData = [
+  ['background',0.3614,'#6b7280',true],['building_flooded',0.4142,'#ef4444',true],
+  ['building_non_flooded',0.0000,'#f97316',false],['grass',0.5646,'#22c55e',true],
+  ['pool',0.3155,'#06b6d4',true],['road_flooded',0.4197,'#a855f7',true],
+  ['road_non_flooded',0.0000,'#14b8a6',false],['tree',0.5229,'#16a34a',true],
+  ['vehicle',0.2751,'#f59e0b',true],['water',0.0733,'#3b82f6',true],
+];
+const grid = document.getElementById('iou-grid');
+iouData.forEach(d => {
+  grid.innerHTML += `<div class="iou-row">
+    <div class="iou-class">${d[0]}</div>
+    <div class="iou-value" style="color:${d[2]}">${d[1].toFixed(4)}</div>
+    <div class="iou-bar-bg"><div class="iou-bar-fill" style="background:${d[2]}" data-width="${d[1]*100}"></div></div>
+    <div class="iou-status">${d[3]?'✔':'✘'}</div>
+  </div>`;
+});
+</script>
+</body>
+</html>
